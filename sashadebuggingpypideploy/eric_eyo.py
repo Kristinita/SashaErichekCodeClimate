@@ -26,6 +26,7 @@ from erichek.eric_config import pyfancy_info
 # [OK] Р‘РѕРєСЃС‘СЂС‹-С‚СЏР¶РµР»РѕРІРµСЃС‹.txt
 
 # Smell code from collaborator
+# Duplicate
 def smell_code():
     """Check files, that «ё» contains.
 
