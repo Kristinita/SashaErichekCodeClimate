@@ -25,6 +25,32 @@ from erichek.eric_config import pyfancy_info
 # I get mojibakes, if only setx PYTHONIOENCODING utf-8, example:
 # [OK] Р‘РѕРєСЃС‘СЂС‹-С‚СЏР¶РµР»РѕРІРµСЃС‹.txt
 
+# Smell code from collaborator
+def smell_code():
+    """Check files, that «ё» contains.
+
+    Check files, use «eyo» checker:
+    https://www.npmjs.com/package/eyo
+    """
+    for filename_pylint in files_loop():
+        eyo_command = delegator.run(
+            'eyo --lint --only-safe ' + filename_pylint)
+        # Decode mojibake to UTF-8
+        pyfancy_info(eyo_command.out.encode('cp1251').decode('utf-8'))
+        if eyo_command.return_code == 22:
+            # eyo not support in-place replacing:
+            # https://github.com/hcodes/eyo/issues/15
+            pyfancy_error("«ё» replacing needs in " + filename_pylint)
+            delegator.run('eyo ' + filename_pylint + ' > temp')
+            # shutil.move move and force overwrite a file:
+            # https://stackoverflow.com/a/8858026/5951529
+            shutil.move('temp', filename_pylint)
+            yield False
+        else:
+            pyfancy_debug(
+                "eyo did not find any gross errors related to «ё» in the file " +
+                filename_pylint)
+
 
 def eric_eyo():
     """Check files, that «ё» contains.
